@@ -153,9 +153,9 @@
     "webpack-dev-server": "^4.15.0",
     "webpack-merge": "^5.9.0"
   },
-    "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+  "build": {
+    "productName": "MeerkatGPT",
+    "appId": "org.erb.MeerkatGPT",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
@@ -213,15 +213,15 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "MeerkatGPT",
+      "repo": "CleverCodeCravers/MeerkatGPT"
     }
   },
-    "devEngines": {
+  "devEngines": {
     "node": ">=14.x",
     "npm": ">=7.x"
   },
-    "electronmon": {
+  "electronmon": {
     "patterns": [
       "!**/**",
       "src/main/**"

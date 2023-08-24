@@ -18,10 +18,9 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+const configPath = join(app.getPath('userData'), 'feeds.json');
 
-const feedManager = new RSSFeedFileManager(
-  join(app.getPath('userData'), 'feeds.json')
-);
+const feedManager = new RSSFeedFileManager(configPath);
 
 console.log(join(app.getPath('userData'), 'feeds.json'));
 
@@ -41,8 +40,8 @@ ipcMain.on('remove-rss', (event, args) => {
 });
 
 ipcMain.handle('fetch-feeds', (event: Electron.IpcMainInvokeEvent) => {
+  console.log(event.preventDefault());
   try {
-    console.log(event.sender);
     const feeds: RSSFeeds = feedManager.load();
     return feeds;
   } catch (error) {
