@@ -1,0 +1,383 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+  /* position: relative;
+  color: white;
+  height: 100vh; */
+  /* background: linear-gradient(
+    200.96deg,
+    #fedc2a -29.09%,
+    #dd5789 51.77%,
+    #7a2c9e 129.35%
+  ); */
+  /* font-family: sans-serif; */
+  /* overflow-y: hidden; */
+  /* display: flexbox; */
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+/* button {
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  appearance: none;
+  font-size: 1.3rem;
+  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
+    0px 18px 88px -4px rgba(24, 39, 75, 0.14);
+  transition: all ease-in 0.1s;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  height: fit-content;
+  width: fit-content;
+  margin: 10px;
+}
+
+a:hover {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.Hello {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #bdc3c7; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #2c3e50,
+    #bdc3c7
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #2c3e50,
+    #bdc3c7
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.container {
+  /* background-color: red; */
+  margin: 0 auto;
+  width: 1400px;
+}
+
+.main-header {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: space-between;
+  background-color: #d3c9c910;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  /* background-color: blue; */
+}
+
+.main-header img {
+  justify-self: start;
+  margin-left: 90px;
+}
+
+.test {
+  justify-self: start;
+  align-self: center;
+  grid-column: 2/-1;
+  font-style: italic;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 19px;
+  /* align-items: center; */
+  /* gap: 20px; */
+  /* gap: 60px; */
+}
+
+.nachrichten-quellen {
+  justify-self: start;
+}
+
+.artikeln-liste {
+  justify-self: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  /* background-color: #bdc3c7; */
+  background-color: #1f79dc;
+  font-size: 15px;
+  text-transform: uppercase;
+  /* color: rgb(59, 59, 59); */
+  color: rgb(233, 227, 227);
+  margin-top: 13px;
+  padding: 10px;
+  border-radius: 100px;
+}
+
+.btn:hover {
+  background-color: white;
+  color: #1f79dc;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.rss-feeds-area {
+  background-color: rgb(212, 212, 212);
+}
+
+.rss-feeds {
+  list-style: none;
+  background-color: #bdc3c7;
+  width: 500px;
+  height: 250px;
+  overflow: auto;
+  /* border: 1px solid #ccc; */
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.rss-feeds li {
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.rss-feeds li:last-child {
+  border-bottom: none;
+}
+
+.btn-update {
+  /* margin-bottom: 10px; */
+  justify-self: end;
+  margin-top: 0px;
+  /* margin-bottom: 13px; */
+}
+
+.nachrichten-quellen-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.nachrichten-quellen-header h2 {
+  margin-bottom: 0px;
+  padding-top: 5px;
+}
+
+.artikeln-liste h2 {
+  padding-top: 5px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.rss-articles {
+  list-style: none;
+  background-color: #bdc3c7;
+  width: 800px;
+  height: 250px;
+  overflow: auto;
+  /* border: 1px solid #ccc; */
+  padding: 10px;
+  border-radius: 12px;
+}
+
+/* .rss-articles li {
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+} */
+
+.list-felx {
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.list-felx:last-child {
+  border-bottom: none;
+}
+
+/* .rss-articles li:last-child {
+  border-bottom: none;
+} */
+
+.search-text-area {
+  background-color: #bdc3c7;
+  font-size: 20px;
+  border-radius: 12px;
+  direction: ltr;
+  padding-top: 20px;
+  padding-left: 20px;
+  resize: none;
+  /* padding-top: 9px; */
+  /* padding: 20px; */
+}
+
+.btn-search {
+}
+
+.search-area {
+  justify-self: start;
+}
+
+.artikeln-liste {
+  justify-self: start;
+}
+
+.list-felx {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-lesen {
+  margin-top: 0px;
+  font-size: 10px;
+}
+
+.artikel-title {
+  margin-top: 5px;
+}
+
+.rss-feed {
+  display: flex;
+  justify-content: start;
+}
+
+.feed-icon {
+  fill: #1f79dc;
+  width: 25px;
+  height: 25px;
+}
+
+.feed-name {
+  padding: 5px;
+  margin-left: 6px;
+}
+
+.list-felx .item {
+  display: flex;
+  align-items: center;
+}
+
+.list-felx .item span {
+  margin-left: 10px;
+}
+
+.article-icon {
+  fill: #1f79dc;
+  width: 25px;
+  height: 25px;
+}
+
+/* AddRSSModal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.form-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #f0f0f0; /* Change to your preferred background color */
+  /* border: 1px solid #007bff; Change to your preferred border color */
+  /* Add any other styling you want for selected feeds */
+}
