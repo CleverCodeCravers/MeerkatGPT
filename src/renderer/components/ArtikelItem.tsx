@@ -1,13 +1,28 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import React from 'react';
 
 interface ArtikelItemProps {
   artikelTitle: string;
+  url: string;
+  onSelect: () => void;
+  isSelected: boolean;
 }
 
-export default function ArtikelItem({ artikelTitle }: ArtikelItemProps) {
+export default function ArtikelItem({
+  artikelTitle,
+  url,
+  onSelect,
+  isSelected,
+}: ArtikelItemProps) {
+  function openArticle() {
+    window.electron.ipcRenderer.openExternal('open-url', url);
+  }
+
   return (
-    <li className="list-felx">
-      <div className="item">
+    <li className={`list-felx  ${isSelected ? 'selected' : ''}`}>
+      <div className="item" onClick={onSelect}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"
@@ -21,7 +36,7 @@ export default function ArtikelItem({ artikelTitle }: ArtikelItemProps) {
           <strong>{artikelTitle}</strong>
         </span>
       </div>
-      <button type="button" className="btn btn-lesen">
+      <button type="button" className="btn btn-lesen" onClick={openArticle}>
         Lesen
       </button>
     </li>

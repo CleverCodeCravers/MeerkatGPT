@@ -9,7 +9,9 @@ export type Channels =
   | 'save-rss'
   | 'fetch-feeds'
   | 'remove-rss'
-  | 'update-articles';
+  | 'update-articles'
+  | 'open-url'
+  | 'search-gpt';
 
 const electronHandler = {
   ipcRenderer: {
@@ -17,12 +19,16 @@ const electronHandler = {
       ipcRenderer.send(channel, data);
     },
 
-    async invoke(channel: Channels) {
-      return ipcRenderer.invoke(channel);
+    async invoke(channel: Channels, args?: any) {
+      return ipcRenderer.invoke(channel, args);
     },
 
     removeRSSFeed(channel: Channels, data: string) {
       ipcRenderer.send(channel, data);
+    },
+
+    openExternal(channel: Channels, url: string) {
+      ipcRenderer.send(channel, url);
     },
   },
 };

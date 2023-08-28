@@ -9,6 +9,7 @@ import RSSFeedFileManager from './BL/RSSFeedFileManager';
 import RSSFeedFetcher from './BL/RSSFeedsFetcher';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import GPTHandler from './BL/GPTRequestsHandler';
 
 class AppUpdater {
   constructor() {
@@ -23,6 +24,7 @@ const configPath = join(app.getPath('userData'), 'feeds.json');
 
 const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
+const gpt = new GPTHandler('');
 
 console.log(join(app.getPath('userData'), 'feeds.json'));
 
@@ -39,6 +41,33 @@ ipcMain.on('remove-rss', (event, args) => {
   const updatedFeeds = currentFeeds.feeds.filter((feed) => feed.name !== args);
   const newFeeds = { feeds: updatedFeeds };
   feedManager.save(newFeeds);
+});
+
+ipcMain.on('open-url', async (event, args) => {
+  shell.openExternal(args);
+});
+
+ipcMain.handle('search-gpt', async (event, args) => {
+  event.preventDefault();
+
+  const text = `
+
+'
+${args.title}
+'
+Bitte prüfe ob der obengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein.
+
+`;
+
+  const response = await gpt.askGPT([
+    { role: 'user', content: text },
+    {
+      role: 'user',
+      content: `Welche Informationen zu ${args.searchQuery} enthält der oben genannte Text`,
+    },
+  ]);
+  console.log(response);
+  return response;
 });
 
 ipcMain.handle('update-articles', async (event) => {

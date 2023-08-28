@@ -1,6 +1,4 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-// import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-// import icon from '../../assets/icon.svg';
 import React from 'react';
 import './App.css';
 
@@ -10,6 +8,8 @@ import Header from './components/Header';
 import TextSearch from './components/TextSearch';
 import ArticlesProvider from './components/ArticlesContext';
 import SearchResult from './components/SearchResult';
+import SearchProvider from './components/SearchContext';
+import GPTProvider from './components/GPTContext';
 
 export default function App() {
   return (
@@ -17,9 +17,13 @@ export default function App() {
       <Header />
       <div className="app">
         <NachrichtenQuellen />
-        <ArtikelListe />
-        <TextSearch />
-        <SearchResult />
+        <GPTProvider>
+          <SearchProvider>
+            <ArtikelListe />
+            <TextSearch />
+            <SearchResult />
+          </SearchProvider>
+        </GPTProvider>
       </div>
     </ArticlesProvider>
   );
