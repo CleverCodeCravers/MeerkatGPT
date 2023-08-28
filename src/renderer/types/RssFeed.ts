@@ -1,4 +1,4 @@
-export interface RSSFeed {
+export interface RSSFeedConfig {
   name: string;
   url: string;
 }

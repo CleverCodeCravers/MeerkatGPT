@@ -1,66 +1,3 @@
-/*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
- *        See https://github.com/webpack-contrib/sass-loader#imports
- */
-body {
-  /* position: relative;
-  color: white;
-  height: 100vh; */
-  /* background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
-  ); */
-  /* font-family: sans-serif; */
-  /* overflow-y: hidden; */
-  /* display: flexbox; */
-  /* justify-content: center; */
-  /* align-items: center; */
-}
-
-/* button {
-  background-color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  appearance: none;
-  font-size: 1.3rem;
-  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
-    0px 18px 88px -4px rgba(24, 39, 75, 0.14);
-  transition: all ease-in 0.1s;
-  cursor: pointer;
-  opacity: 0.9;
-}
-
-button:hover {
-  transform: scale(1.05);
-  opacity: 1;
-}
-
-li {
-  list-style: none;
-}
-
-a {
-  text-decoration: none;
-  height: fit-content;
-  width: fit-content;
-  margin: 10px;
-}
-
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-}
-
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-} */
-
 * {
   margin: 0;
   padding: 0;
@@ -69,21 +6,12 @@ a:hover {
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #bdc3c7; /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to right,
-    #2c3e50,
-    #bdc3c7
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to right,
-    #2c3e50,
-    #bdc3c7
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: #bdc3c7;
+  background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);
+  background: linear-gradient(to right, #2c3e50, #bdc3c7);
 }
 
 .container {
-  /* background-color: red; */
   margin: 0 auto;
   width: 1400px;
 }
@@ -95,7 +23,6 @@ body {
   background-color: #d3c9c910;
   margin-top: 20px;
   margin-bottom: 30px;
-  /* background-color: blue; */
 }
 
 .main-header img {
@@ -115,17 +42,16 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 19px;
-  /* align-items: center; */
-  /* gap: 20px; */
-  /* gap: 60px; */
 }
 
 .nachrichten-quellen {
   justify-self: start;
+  -webkit-app-region: no-drag;
 }
 
 .artikeln-liste {
   justify-self: center;
+  -webkit-app-region: no-drag;
 }
 
 .buttons {
@@ -134,11 +60,9 @@ body {
 }
 
 .btn {
-  /* background-color: #bdc3c7; */
   background-color: #1f79dc;
   font-size: 15px;
   text-transform: uppercase;
-  /* color: rgb(59, 59, 59); */
   color: rgb(233, 227, 227);
   margin-top: 13px;
   padding: 10px;
@@ -164,7 +88,6 @@ h2 {
   width: 500px;
   height: 250px;
   overflow: auto;
-  /* border: 1px solid #ccc; */
   padding: 10px;
   border-radius: 12px;
 }
@@ -179,10 +102,8 @@ h2 {
 }
 
 .btn-update {
-  /* margin-bottom: 10px; */
   justify-self: end;
   margin-top: 0px;
-  /* margin-bottom: 13px; */
 }
 
 .nachrichten-quellen-header {
@@ -208,7 +129,6 @@ h2 {
   width: 800px;
   height: 250px;
   overflow: auto;
-  /* border: 1px solid #ccc; */
   padding: 10px;
   border-radius: 12px;
 }
@@ -239,8 +159,6 @@ h2 {
   padding-top: 20px;
   padding-left: 20px;
   resize: none;
-  /* padding-top: 9px; */
-  /* padding: 20px; */
 }
 
 .btn-search {
@@ -248,6 +166,7 @@ h2 {
 
 .search-area {
   justify-self: start;
+  -webkit-app-region: no-drag;
 }
 
 .artikeln-liste {
@@ -377,7 +296,34 @@ button {
 }
 
 .selected {
-  background-color: #f0f0f0; /* Change to your preferred background color */
-  /* border: 1px solid #007bff; Change to your preferred border color */
+  background-color: #f0f0f0;
+  /* border: 1px solid #007bff;
   /* Add any other styling you want for selected feeds */
+}
+
+.search-result {
+  justify-self: start;
+  align-self: center;
+  margin-bottom: 50px;
+  /* background-color: red; */
+}
+
+.search-result-area {
+  background-color: #bdc3c7;
+  border: 1px solid #ccc;
+  padding: 20px;
+  width: 800px;
+  height: 275px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-result h2 {
+  text-align: center;
+}
+
+.search-result-area p {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
 }

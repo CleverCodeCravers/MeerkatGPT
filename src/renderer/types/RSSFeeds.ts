@@ -1,5 +1,5 @@
-import { RSSFeed } from './RssFeed';
+import { RSSFeedConfig } from './RSSFeed';
 
 export interface RSSFeeds {
-  feeds: RSSFeed[];
+  feeds: RSSFeedConfig[];
 }

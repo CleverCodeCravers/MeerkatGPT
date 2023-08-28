@@ -1,14 +1,19 @@
 import React from 'react';
-import ArtikelItme from './ArtikelItem';
+import ArtikelItem from './ArtikelItem';
+import { useArticlesContext } from './ArticlesContext';
 
 export default function ArtikelListe() {
-  const artikelName = 'Naseif has gone crazy ';
+  const { articles } = useArticlesContext();
+
   return (
     <div className="artikeln-liste">
       <h2>Artikelliste</h2>
       <ul className="rss-articles">
-        <ArtikelItme artikelTitle={artikelName} />
-        <ArtikelItme artikelTitle={artikelName} />
+        {articles.map((article) => {
+          return article.items?.map((item) => {
+            return <ArtikelItem artikelTitle={item.title} key={item.guid} />;
+          });
+        })}
       </ul>
     </div>
   );

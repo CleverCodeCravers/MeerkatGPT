@@ -6,6 +6,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { RSSFeeds } from 'renderer/types/RSSFeeds';
 import RSSFeedFileManager from './BL/RSSFeedFileManager';
+import RSSFeedFetcher from './BL/RSSFeedsFetcher';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -21,6 +22,7 @@ let mainWindow: BrowserWindow | null = null;
 const configPath = join(app.getPath('userData'), 'feeds.json');
 
 const feedManager = new RSSFeedFileManager(configPath);
+const feedsFetcher = new RSSFeedFetcher();
 
 console.log(join(app.getPath('userData'), 'feeds.json'));
 
@@ -39,8 +41,21 @@ ipcMain.on('remove-rss', (event, args) => {
   feedManager.save(newFeeds);
 });
 
+ipcMain.handle('update-articles', async (event) => {
+  event.preventDefault();
+
+  try {
+    const feeds = feedManager.load();
+    if (feeds.feeds.length === 0) return [];
+    const articles = await feedsFetcher.fetchRSSFeeds(feeds);
+    return articles;
+  } catch (error) {
+    return [];
+  }
+});
+
 ipcMain.handle('fetch-feeds', (event: Electron.IpcMainInvokeEvent) => {
-  console.log(event.preventDefault());
+  event.preventDefault();
   try {
     const feeds: RSSFeeds = feedManager.load();
     return feeds;

@@ -2,14 +2,18 @@
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer } from 'electron';
 import { RSSFeeds } from 'renderer/types/RSSFeeds';
-import { RSSFeed } from 'renderer/types/RssFeed';
+import { RSSFeedConfig } from '../renderer/types/RSSFeed';
 // import RSSFeedFileManager from 'renderer/BL/RSSFeedFileManager';
 
-export type Channels = 'save-rss' | 'fetch-feeds' | 'remove-rss';
+export type Channels =
+  | 'save-rss'
+  | 'fetch-feeds'
+  | 'remove-rss'
+  | 'update-articles';
 
 const electronHandler = {
   ipcRenderer: {
-    saveRssFeed(channel: Channels, data: RSSFeed | RSSFeeds) {
+    saveRssFeed(channel: Channels, data: RSSFeedConfig | RSSFeeds) {
       ipcRenderer.send(channel, data);
     },
 

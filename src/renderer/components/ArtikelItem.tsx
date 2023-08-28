@@ -4,7 +4,7 @@ interface ArtikelItemProps {
   artikelTitle: string;
 }
 
-export default function ArtikelItme({ artikelTitle }: ArtikelItemProps) {
+export default function ArtikelItem({ artikelTitle }: ArtikelItemProps) {
   return (
     <li className="list-felx">
       <div className="item">

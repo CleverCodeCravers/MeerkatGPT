@@ -1,5 +1,7 @@
 import Parser from 'rss-parser';
-import fetch from 'node-fetch';
+import { RSSFeedConfig } from 'renderer/types/RSSFeed';
+import { RSSFeeds } from 'renderer/types/RSSFeeds';
+import { Feed } from 'main/types/Feed';
 
 export default class RSSFeedFetcher {
   parser: Parser;
@@ -8,29 +10,22 @@ export default class RSSFeedFetcher {
     this.parser = new Parser();
   }
 
-  async fetchRSSFeeds(urls: string[]): Promise<any[]> {
-    const promises = urls.map((url) => this.fetchRSSFeed(url));
+  async fetchRSSFeeds(feeds: RSSFeeds): Promise<Feed[]> {
+    const promises = feeds.feeds.map((feed) => this.fetchRSSFeed(feed));
     const allFeeds = await Promise.all(promises);
     return allFeeds;
   }
 
-  async fetchRSSFeed(url: string): Promise<any> {
+  async fetchRSSFeed(feed: RSSFeedConfig): Promise<any> {
     try {
-      const parsedFeed = await this.parser.parseURL(url);
+      const parsedFeed = await this.parser.parseURL(feed.url);
       return parsedFeed;
     } catch (error) {
-      console.log(`Error fetching or parsing RSS feed from ${url}:`, error);
+      console.log(
+        `Error fetching or parsing RSS feed from ${feed.name}:`,
+        error
+      );
       throw error;
-    }
-  }
-
-  static async isRSSFeedValid(url: string): Promise<boolean | undefined> {
-    try {
-      const response = await fetch(url);
-      return response.headers.get('content-type')?.includes('xml');
-    } catch (error) {
-      console.error(`Error checking validity of RSS feed from ${url}:`, error);
-      return false;
     }
   }
 }
