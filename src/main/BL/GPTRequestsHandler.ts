@@ -46,10 +46,10 @@ export default class GPTHandler {
       }
       const messeages = this.messages;
       this.clear();
-
       return messeages;
-    } catch (error) {
-      return null;
+    } catch (error: unknown) {
+      // @ts-expect-error
+      return error.message;
     }
   }
 

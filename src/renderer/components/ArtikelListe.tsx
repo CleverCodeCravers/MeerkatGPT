@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FeedArticleItem } from 'main/types/FeedArticleItem';
 import ArtikelItem from './ArtikelItem';
 import { useArticlesContext } from './ArticlesContext';
 import { useSearchContext } from './SearchContext';
@@ -6,28 +7,28 @@ import { useGPTContext } from './GPTContext';
 
 export default function ArtikelListe() {
   const { articles } = useArticlesContext();
-  const [selectedItem, setSelectedItemState] = useState(null);
+  const [selectedItem, setSelectedItemState] = useState<FeedArticleItem>();
   const { setResponse } = useGPTContext();
   const { searchQuery } = useSearchContext();
 
-  const askGPT = async (title: string, query: string) => {
+  const askGPT = async (content: string, query: string) => {
     try {
       const response: any[] = await window.electron.ipcRenderer.invoke(
         'search-gpt',
-        { title, searchQuery: query }
+        { content, searchQuery: query }
       );
 
-      return setResponse({ title, response });
+      return setResponse({ title: content, response });
     } catch (error) {
       setResponse({ title: '', response: [] });
       return [];
     }
   };
 
-  const handleItemClick = (item: any) => {
+  const handleItemClick = (item: FeedArticleItem) => {
     setSelectedItemState(item);
     if (searchQuery) {
-      askGPT(item.title, searchQuery);
+      askGPT(item['content:encodedSnippet'], searchQuery);
     }
   };
 

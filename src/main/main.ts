@@ -49,11 +49,10 @@ ipcMain.on('open-url', async (event, args) => {
 
 ipcMain.handle('search-gpt', async (event, args) => {
   event.preventDefault();
-
   const text = `
 
 '
-${args.title}
+${args.content}
 '
 Bitte prüfe ob der obengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein.
 
@@ -135,9 +134,9 @@ const createWindow = async () => {
     show: true,
     width: 1600,
     height: 1050,
+    minWidth: 1450,
     icon: getAssetPath('meerkat/favicon.ico'),
     webPreferences: {
-      devTools: true,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
