@@ -24,11 +24,22 @@ jobs:
       - name: Build the app
         run: npm run package
 
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ./dist/*
-          token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: ${{ github.ref }}
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./dist/*
+        token: ${{ secrets.GITHUB_TOKEN }}
+        release_name: ${{ github.ref }}
+
+    - name: Zip release/build
+      run: |
+        cd release
+        zip -r build.zip build
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifact
+        path: release/build.zip
