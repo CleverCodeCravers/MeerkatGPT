@@ -8,4 +8,5 @@ export interface FeedArticleItem {
   pubDate: string;
   guid: string;
   isoDate: Date;
+  gptResult?: any;
 }

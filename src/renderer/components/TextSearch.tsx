@@ -1,13 +1,31 @@
 import React, { useState } from 'react';
+import { Feed } from 'main/types/Feed';
 import { useSearchContext } from './SearchContext';
+import { useArticlesContext } from './ArticlesContext';
 
 function TextSearch() {
   const { setSearchQuery } = useSearchContext();
   const [textValue, setTextValue] = useState('');
+  const { articles } = useArticlesContext();
+
+  const askGPT = async (item: Feed[], query: string) => {
+    try {
+      const response: any[] = await window.electron.ipcRenderer.invoke(
+        'search-gpt',
+        { articles, searchQuery: query }
+      );
+      return response;
+    } catch (error) {
+      return [];
+    }
+  };
 
   function handleSearchButton() {
     setSearchQuery(textValue);
-    setTextValue('');
+
+    if (textValue) {
+      askGPT(articles, textValue);
+    }
   }
 
   return (

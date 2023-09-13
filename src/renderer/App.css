@@ -133,6 +133,11 @@ h2 {
   border-radius: 12px;
 }
 
+.rss-articles li:first-child {
+  background-color: #bdc3c7;
+  margin-bottom: 10px;
+}
+
 /* .rss-articles li {
   padding: 5px;
   border-bottom: 1px solid #ccc;
@@ -176,6 +181,29 @@ h2 {
 .list-felx {
   display: flex;
   justify-content: space-between;
+  width: 100%;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.article-title {
+  flex: 1;
+  margin-left: 35px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: large;
+  /* margin-bottom: 10px; */
+}
+
+.list-felx .article-interesting {
+  margin-right: 69px;
+  font-weight: bold;
+  font-size: large;
+  width: 100px; /* Set fixed width for the item column */
 }
 
 .btn-lesen {
@@ -210,6 +238,7 @@ h2 {
 
 .list-felx .item span {
   margin-left: 10px;
+  width: 540px;
 }
 
 .article-icon {
@@ -340,4 +369,29 @@ button {
 .search-result-area h3 {
   text-align: center;
   margin-bottom: 15px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

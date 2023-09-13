@@ -1,3 +1,6 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-unreachable-loop */
+/* eslint-disable no-restricted-syntax */
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 import path, { join } from 'path';
@@ -10,6 +13,9 @@ import RSSFeedFetcher from './BL/RSSFeedsFetcher';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import GPTHandler from './BL/GPTRequestsHandler';
+import { Feed } from './types/Feed';
+import fetchNewsArticle from './BL/FeedArticleScraper';
+import chunkSubString from './helpers/StringsUtil';
 
 class AppUpdater {
   constructor() {
@@ -25,8 +31,6 @@ const configPath = join(app.getPath('userData'), 'feeds.json');
 const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
 const gpt = new GPTHandler('');
-
-console.log(join(app.getPath('userData'), 'feeds.json'));
 
 ipcMain.on('save-rss', (event, args) => {
   const currentFeeds = feedManager.load();
@@ -49,24 +53,41 @@ ipcMain.on('open-url', async (event, args) => {
 
 ipcMain.handle('search-gpt', async (event, args) => {
   event.preventDefault();
-  const text = `
 
-'
-${args.content}
-'
-Bitte prüfe ob der obengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein.
+  const articles = args.articles as Feed[];
+  const results: any[] = [];
 
-`;
+  for (const feed of articles) {
+    if (feed?.items) {
+      for (const item of feed.items) {
+        const fetchArticle = await fetchNewsArticle(item.link);
+        const text = `
+        Bitte prüfe ob der untengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein nur.
+            '
+            ${fetchArticle}
+            '`;
 
-  const response = await gpt.askGPT([
-    { role: 'user', content: text },
-    {
-      role: 'user',
-      content: `Welche Informationen zu ${args.searchQuery} enthält der oben genannte Text`,
-    },
-  ]);
-  console.log(response);
-  return response;
+        const textProccessed = chunkSubString(text, 4000);
+        const response = await gpt.askGPT([
+          { role: 'user', content: textProccessed[0] },
+          {
+            role: 'user',
+            content: `Welche Informationen zu ${args.searchQuery} enthält der oben genannte Text`,
+          },
+        ]);
+
+        results.push(response); // Store the response for each article
+
+        // Send the response back to the frontend
+        event.sender.send('gpt-response', {
+          feed: item,
+          response,
+        });
+      }
+    }
+  }
+
+  return results.flat(1);
 });
 
 ipcMain.handle('update-articles', async (event) => {

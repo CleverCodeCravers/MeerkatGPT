@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
@@ -8,6 +9,7 @@ interface ArtikelItemProps {
   url: string;
   onSelect: () => void;
   isSelected: boolean;
+  isInteresting: boolean | undefined;
 }
 
 export default function ArtikelItem({
@@ -15,6 +17,7 @@ export default function ArtikelItem({
   url,
   onSelect,
   isSelected,
+  isInteresting,
 }: ArtikelItemProps) {
   function openArticle() {
     window.electron.ipcRenderer.openExternal('open-url', url);
@@ -36,6 +39,13 @@ export default function ArtikelItem({
           <strong>{artikelTitle}</strong>
         </span>
       </div>
+      {isInteresting === true ? (
+        <div>✅</div>
+      ) : isInteresting === false ? (
+        <div>❌</div>
+      ) : (
+        <div />
+      )}
       <button type="button" className="btn btn-lesen" onClick={openArticle}>
         Lesen
       </button>

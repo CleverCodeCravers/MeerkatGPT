@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface GPTContextProps {
-  response: { title: string; response: any[] };
-  setResponse: React.Dispatch<
-    React.SetStateAction<{ title: string; response: any[] }>
-  >;
+  response: any[];
+  setResponse: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const GPTContext = createContext<GPTContextProps | undefined>(undefined);
@@ -20,10 +18,7 @@ export const useGPTContext = () => {
 };
 
 export default function GPTProvider({ children }: any) {
-  const [response, setResponse] = useState<{ title: string; response: any[] }>({
-    title: '',
-    response: [],
-  });
+  const [response, setResponse] = useState<any[]>([]);
   const contextValue = useMemo(
     () => ({ response, setResponse }),
     [response, setResponse]

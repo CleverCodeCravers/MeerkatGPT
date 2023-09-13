@@ -1,6 +1,6 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
-import { contextBridge, ipcRenderer } from 'electron';
+import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
 import { RSSFeeds } from 'renderer/types/RSSFeeds';
 import { RSSFeedConfig } from '../renderer/types/RSSFeed';
 // import RSSFeedFileManager from 'renderer/BL/RSSFeedFileManager';
@@ -11,10 +11,30 @@ export type Channels =
   | 'remove-rss'
   | 'update-articles'
   | 'open-url'
-  | 'search-gpt';
+  | 'search-gpt'
+  | 'gpt-response';
 
 const electronHandler = {
   ipcRenderer: {
+    on(channel: Channels, func: (...args: unknown[]) => void) {
+      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) =>
+        func(...args);
+      ipcRenderer.on(channel, subscription);
+
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    },
+    removeListener(channel: Channels, func: (...args: unknown[]) => void) {
+      return () => {
+        ipcRenderer.removeListener(channel, func);
+      };
+    },
+
+    once(channel: Channels, func: (...args: unknown[]) => void) {
+      ipcRenderer.once(channel, (_event, ...args) => func(...args));
+    },
+
     saveRssFeed(channel: Channels, data: RSSFeedConfig | RSSFeeds) {
       ipcRenderer.send(channel, data);
     },

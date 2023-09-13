@@ -10,20 +10,23 @@ import ArticlesProvider from './components/ArticlesContext';
 import SearchResult from './components/SearchResult';
 import SearchProvider from './components/SearchContext';
 import GPTProvider from './components/GPTContext';
+import LoadingContext from './components/LoadingContext';
 
 export default function App() {
   return (
     <ArticlesProvider>
       <Header />
       <div className="app">
-        <NachrichtenQuellen />
-        <GPTProvider>
-          <SearchProvider>
-            <ArtikelListe />
-            <TextSearch />
-            <SearchResult />
-          </SearchProvider>
-        </GPTProvider>
+        <LoadingContext>
+          <NachrichtenQuellen />
+          <GPTProvider>
+            <SearchProvider>
+              <ArtikelListe />
+              <TextSearch />
+              <SearchResult />
+            </SearchProvider>
+          </GPTProvider>
+        </LoadingContext>
       </div>
     </ArticlesProvider>
   );

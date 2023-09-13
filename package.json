@@ -75,6 +75,7 @@
   },
   "homepage": "https://github.com/CleverCodeCravers/MeerkatGPT#readme",
   "dependencies": {
+    "axios": "^1.5.0",
     "bootstrap": "^5.3.0",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",

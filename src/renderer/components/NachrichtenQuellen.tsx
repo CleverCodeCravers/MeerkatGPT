@@ -5,12 +5,13 @@ import { Feed } from 'main/types/Feed';
 import AddRSSModal from './AddRSSFeedModal';
 import NachrichtenQuelle from './NachrichtenQuelle';
 import { useArticlesContext } from './ArticlesContext';
+import { useLoadingContext } from './LoadingContext';
 
 export default function NachrichtenQuellen() {
   const [showModal, setShowModal] = useState(false);
   const [feeds, setFeeds] = useState<RSSFeeds>({ feeds: [] });
   const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
-
+  const { setIsLoading } = useLoadingContext();
   const { setArticles } = useArticlesContext();
 
   const handleSelectFeed = (name: string) => {
@@ -63,11 +64,12 @@ export default function NachrichtenQuellen() {
   };
 
   const updateArtikelListe = async () => {
+    setIsLoading(true);
     try {
       const response: Feed[] = await window.electron.ipcRenderer.invoke(
         'update-articles'
       );
-
+      setIsLoading(false);
       return setArticles(response);
     } catch (error) {
       return [];
