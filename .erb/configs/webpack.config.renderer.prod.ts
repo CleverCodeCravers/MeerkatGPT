@@ -55,6 +55,10 @@ const configuration: webpack.Configuration = {
         include: /\.module\.s?(c|a)ss$/,
       },
       {
+        test: /canvas\.node$/,
+        use: 'node-loader',
+      },
+      {
         test: /\.s?(a|c)ss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         exclude: /\.module\.s?(c|a)ss$/,
