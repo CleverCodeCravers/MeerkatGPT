@@ -1,28 +1,25 @@
 import axios from 'axios';
-import { JSDOM } from 'jsdom';
+import { load } from 'cheerio';
 
 export default async function fetchNewsArticle(url: string): Promise<string> {
   try {
-    const response = await axios.get(url);
-    const htmlContent = response.data;
+    const antwort = await axios.get(url);
+    const htmlInhalt = antwort.data;
+    const $ = load(htmlInhalt);
+    const artikelElement = $('article');
 
-    const dom = new JSDOM(htmlContent);
-    const articleElement = dom.window.document.querySelector('article'); // Adjust the selector as needed
-
-    if (!articleElement) {
-      throw new Error('Article content not found');
+    if (!artikelElement.length) {
+      throw new Error('Artikelinhalt nicht gefunden');
     }
 
-    const articleText = articleElement.textContent || '';
-
-    const trimmedText = articleText
+    const artikelText = artikelElement.text();
+    const bereinigterText = artikelText
       .replace(/\s+/g, ' ')
       .trim()
       .replace('\n', '');
 
-    return trimmedText;
-  } catch (error) {
-    // console.error('Error fetching news article:', error.message);
-    throw new Error('Failed to fetch news article');
+    return bereinigterText;
+  } catch (fehler) {
+    throw new Error('Fehler beim Abrufen des Nachrichtenartikels');
   }
 }
