@@ -30,7 +30,7 @@ jobs:
           Set-Location .\release\build
           ls
           $zipDateiName = "windows-release.zip"
-          $exeDateien = Get-ChildItem -Path . -Include *.exe
+          $exeDateien = Get-ChildItem *.exe
           if ($exeDateien.Count -eq 0) {
             Write-Host "Keine EXE-Dateien gefunden."
             exit 1
