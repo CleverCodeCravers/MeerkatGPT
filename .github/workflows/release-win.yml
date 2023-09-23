@@ -41,6 +41,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./release/win-release.zip
+            ./release/build/win-release.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           release_name: ${{ github.ref }}

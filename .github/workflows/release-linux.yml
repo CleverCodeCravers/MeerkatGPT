@@ -34,6 +34,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./release/linux-release.zip
+            ./release/build/linux-release.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           release_name: ${{ github.ref }}
