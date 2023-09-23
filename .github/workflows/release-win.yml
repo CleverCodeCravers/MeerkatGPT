@@ -28,6 +28,7 @@ jobs:
         shell: pwsh
         run: |
           Set-Location .\release\build
+          ls
           $zipDateiName = "windows-release.zip"
           $exeDateien = Get-ChildItem -Path . -Include *.exe
           if ($exeDateien.Count -eq 0) {
