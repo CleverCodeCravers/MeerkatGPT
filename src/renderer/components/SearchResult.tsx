@@ -10,7 +10,6 @@ function SearchResult() {
   const { response } = useGPTContext();
   const { searchQuery } = useSearchContext();
 
-  // @ts-expect-error
   if (response.response === null || typeof response.response === 'string') {
     return (
       <div className="search-result">
@@ -18,14 +17,9 @@ function SearchResult() {
         <div className="search-result-area">
           <p>
             {' '}
-            {
-              // @ts-expect-error
-
-              typeof response.response === 'string'
-                ? // @ts-expect-error
-                  response.response
-                : 'No Result from GPT! :'
-            }
+            {typeof response.response === 'string'
+              ? response.response
+              : 'No Result from GPT! :'}
             /
           </p>
         </div>
@@ -45,9 +39,16 @@ function SearchResult() {
   }
 
   let filterResponse;
-  // @ts-expect-error
+  if (response.response.length <= 0) {
+    return (
+      <div className="search-result">
+        <h2>GPT Results</h2>
+        <div className="search-result-area" />
+      </div>
+    );
+  }
+
   if (response.response) {
-    // @ts-expect-error
     filterResponse = response.response.filter(
       (result: any) => result.role !== 'user'
     );
@@ -57,6 +58,7 @@ function SearchResult() {
         <h2>GPT Results</h2>
         <div className="search-result-area">
           <SearchResulTemplate
+            titel={response.feed.title}
             query={searchQuery}
             firstResponse={filterResponse[0].content}
             secondResponse={filterResponse[1].content}

@@ -9,18 +9,29 @@ import { useLoadingContext } from './LoadingContext';
 export default function ArtikelListe() {
   const { articles, setArticles } = useArticlesContext();
   const [selectedItem, setSelectedItemState] = useState<FeedArticleItem>();
-  const [articleInterestState, setArticleInterestState] = useState<
-    Record<string, boolean>
-  >({});
   const { setResponse } = useGPTContext();
   const { isLoading } = useLoadingContext();
+
   const handleItemClick = (item: FeedArticleItem) => {
     setSelectedItemState(item);
 
     if (item.gptResult) {
       setResponse(item.gptResult);
     } else {
-      setResponse([]);
+      setResponse({
+        feed: {
+          title: '',
+          link: '',
+          'content:encoded': '',
+          'content:encodedSnippet': '',
+          content: '',
+          contentSnippet: '',
+          pubDate: '',
+          guid: '',
+          isoDate: new Date(),
+        },
+        response: [],
+      });
     }
   };
 
@@ -34,10 +45,6 @@ export default function ArtikelListe() {
           isInteresting = true;
         }
       }
-      setArticleInterestState((prevState) => ({
-        ...prevState,
-        [data.feed.guid]: isInteresting,
-      }));
 
       // Store the GPT result in the article data
       const updatedArticles = articles.map((article) => {
@@ -46,6 +53,7 @@ export default function ArtikelListe() {
             return {
               ...item,
               gptResult: data,
+              isInteresting,
             };
           }
           return item;
@@ -73,11 +81,6 @@ export default function ArtikelListe() {
 
         {articles.map((article) => {
           return article.items?.map((item) => {
-            // eslint-disable-next-line no-undef-init
-            let isInteresting: boolean | undefined = undefined;
-            if (articleInterestState[item.guid] !== undefined) {
-              isInteresting = articleInterestState[item.guid];
-            }
             return (
               <ArtikelItem
                 artikelTitle={item.title}
@@ -85,7 +88,7 @@ export default function ArtikelListe() {
                 url={item.link}
                 onSelect={() => handleItemClick(item)}
                 isSelected={selectedItem === item}
-                isInteresting={isInteresting}
+                isInteresting={item.isInteresting}
               />
             );
           });

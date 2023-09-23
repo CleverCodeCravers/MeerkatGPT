@@ -9,4 +9,5 @@ export interface FeedArticleItem {
   guid: string;
   isoDate: Date;
   gptResult?: any;
+  isInteresting?: boolean;
 }

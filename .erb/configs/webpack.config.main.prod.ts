@@ -27,15 +27,6 @@ const configuration: webpack.Configuration = {
     preload: path.join(webpackPaths.srcMainPath, 'preload.ts'),
   },
 
-  module: {
-    rules: [
-      {
-        test: /canvas\.node$/,
-        use: 'node-loader',
-      },
-    ],
-  },
-
   output: {
     path: webpackPaths.distMainPath,
     filename: '[name].js',

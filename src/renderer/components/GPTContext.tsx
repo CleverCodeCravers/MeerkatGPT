@@ -1,8 +1,11 @@
+import { FeedArticleItem } from 'main/types/FeedArticleItem';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface GPTContextProps {
-  response: any[];
-  setResponse: React.Dispatch<React.SetStateAction<any[]>>;
+  response: { feed: FeedArticleItem; response: any[] };
+  setResponse: React.Dispatch<
+    React.SetStateAction<{ feed: FeedArticleItem; response: any[] }>
+  >;
 }
 
 const GPTContext = createContext<GPTContextProps | undefined>(undefined);
@@ -18,7 +21,23 @@ export const useGPTContext = () => {
 };
 
 export default function GPTProvider({ children }: any) {
-  const [response, setResponse] = useState<any[]>([]);
+  const [response, setResponse] = useState<{
+    feed: FeedArticleItem;
+    response: any[];
+  }>({
+    feed: {
+      title: '',
+      link: '',
+      content: '',
+      contentSnippet: '',
+      'content:encoded': '',
+      'content:encodedSnippet': '',
+      guid: '',
+      pubDate: '',
+      isoDate: new Date(),
+    },
+    response: [],
+  });
   const contextValue = useMemo(
     () => ({ response, setResponse }),
     [response, setResponse]
