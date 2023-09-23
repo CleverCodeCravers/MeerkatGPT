@@ -24,7 +24,7 @@ jobs:
       - name: Build the app
         run: npm run package
 
-     - name: ZIP-Archiv für EXE-Dateien erstellen
+      - name: ZIP-Archiv für EXE-Dateien erstellen
         shell: pwsh
         run: |
           Set-Location .\release\build
