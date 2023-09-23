@@ -24,10 +24,17 @@ jobs:
       - name: Build the app
         run: npm run package
 
-      - name: Zip release/build
+     - name: ZIP-Archiv für EXE-Dateien erstellen
+        shell: pwsh
         run: |
-          cd release
-          zip -r win-release.zip *.exe
+          Set-Location .\release\build
+          $zipDateiName = "windows-release.zip"
+          $exeDateien = Get-ChildItem -Path . -Include *.exe
+          if ($exeDateien.Count -eq 0) {
+            Write-Host "Keine EXE-Dateien gefunden."
+            exit 1
+          }
+          Compress-Archive -Path $exeDateien.FullName -DestinationPath $zipDateiName
 
       - name: Create Release
         id: create_release
