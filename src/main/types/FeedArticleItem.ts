@@ -10,4 +10,5 @@ export interface FeedArticleItem {
   isoDate: Date;
   gptResult?: any;
   isInteresting?: boolean;
+  loading?: boolean;
 }

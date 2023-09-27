@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FeedArticleItem } from 'main/types/FeedArticleItem';
 import LoadingSpinner from 'renderer/shared/Loading';
 import ArtikelItem from './ArtikelItem';
@@ -11,6 +11,13 @@ export default function ArtikelListe() {
   const [selectedItem, setSelectedItemState] = useState<FeedArticleItem>();
   const { setResponse } = useGPTContext();
   const { isLoading } = useLoadingContext();
+  const [processingItems, setProcessingItems] = useState<
+    {
+      guid: string;
+      loading: boolean | undefined;
+      isInteresting: boolean | undefined;
+    }[]
+  >([]);
 
   const handleItemClick = (item: FeedArticleItem) => {
     setSelectedItemState(item);
@@ -35,8 +42,8 @@ export default function ArtikelListe() {
     }
   };
 
-  useEffect(() => {
-    const handleGPTResponse = (data: any) => {
+  const handleGPTResponse = useCallback(
+    (data: any) => {
       let isInteresting: boolean;
       if (data.response && data.response.length > 0) {
         if (data.response[1].content.includes('Nein')) {
@@ -46,6 +53,18 @@ export default function ArtikelListe() {
         }
       }
 
+      const updatedProcessingItems = processingItems.map((item) => {
+        if (item.guid === data.feed.guid) {
+          return {
+            ...item,
+            isInteresting,
+            loading: data.loading,
+          };
+        }
+        return item;
+      });
+      setProcessingItems(updatedProcessingItems);
+
       // Store the GPT result in the article data
       const updatedArticles = articles.map((article) => {
         const updatedItems = article.items?.map((item) => {
@@ -53,7 +72,6 @@ export default function ArtikelListe() {
             return {
               ...item,
               gptResult: data,
-              isInteresting,
             };
           }
           return item;
@@ -64,10 +82,37 @@ export default function ArtikelListe() {
         };
       });
       setArticles(updatedArticles);
-    };
+    },
+    [articles, setArticles, processingItems, setProcessingItems]
+  );
 
+  const handleLoading = useCallback(
+    (data: any) => {
+      const { guid } = data.feed;
+      const testLoading = data.loading;
+
+      if (data.loading) {
+        setProcessingItems((prevProcessingItems) => [
+          ...prevProcessingItems,
+          { guid, loading: testLoading, isInteresting: undefined },
+        ]);
+      }
+    },
+    [setProcessingItems]
+  );
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('gpt-loading', handleLoading);
     window.electron.ipcRenderer.on('gpt-response', handleGPTResponse);
-  }, [articles, setArticles]);
+
+    return () => {
+      window.electron.ipcRenderer.removeListener('gpt-loading', handleLoading);
+      window.electron.ipcRenderer.removeListener(
+        'gpt-response',
+        handleGPTResponse
+      );
+    };
+  }, [handleLoading, handleGPTResponse]);
 
   return (
     <div className="artikeln-liste">
@@ -80,15 +125,20 @@ export default function ArtikelListe() {
         </li>
 
         {articles.map((article) => {
-          return article.items?.map((item) => {
+          return article.items?.map((articleItem) => {
+            const loading =
+              processingItems.filter(
+                (item) => item.guid === articleItem.guid
+              ) || undefined;
             return (
               <ArtikelItem
-                artikelTitle={item.title}
-                key={item.guid}
-                url={item.link}
-                onSelect={() => handleItemClick(item)}
-                isSelected={selectedItem === item}
-                isInteresting={item.isInteresting}
+                artikelTitle={articleItem.title}
+                key={articleItem.guid}
+                url={articleItem.link}
+                onSelect={() => handleItemClick(articleItem)}
+                isSelected={selectedItem === articleItem}
+                isInteresting={loading[0]?.isInteresting}
+                isLoading={loading[0]?.loading}
               />
             );
           });

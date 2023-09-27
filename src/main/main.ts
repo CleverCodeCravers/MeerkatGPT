@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-unreachable-loop */
 /* eslint-disable no-restricted-syntax */
@@ -60,7 +61,13 @@ ipcMain.handle('search-gpt', async (event, args) => {
   for (const feed of articles) {
     if (feed?.items) {
       for (const item of feed.items) {
+        event.sender.send('gpt-loading', {
+          feed: item,
+          loading: true,
+        });
+
         const fetchArticle = await fetchNewsArticle(item.link);
+        if (!fetchNewsArticle) continue;
         const text = `
         Bitte prüfe ob der untengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein nur.
             '
@@ -82,6 +89,7 @@ ipcMain.handle('search-gpt', async (event, args) => {
         event.sender.send('gpt-response', {
           feed: item,
           response,
+          loading: false,
         });
       }
     }
@@ -156,8 +164,10 @@ const createWindow = async () => {
     width: 1600,
     height: 1050,
     minWidth: 1450,
+
     icon: getAssetPath('meerkat/favicon.ico'),
     webPreferences: {
+      devTools: !!isDebug,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),

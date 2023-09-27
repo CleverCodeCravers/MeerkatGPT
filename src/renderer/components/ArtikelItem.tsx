@@ -10,6 +10,7 @@ interface ArtikelItemProps {
   onSelect: () => void;
   isSelected: boolean;
   isInteresting: boolean | undefined;
+  isLoading: boolean | undefined;
 }
 
 export default function ArtikelItem({
@@ -18,11 +19,31 @@ export default function ArtikelItem({
   onSelect,
   isSelected,
   isInteresting,
+  isLoading,
 }: ArtikelItemProps) {
   function openArticle() {
     window.electron.ipcRenderer.openExternal('open-url', url);
   }
 
+  function interessantInfo() {
+    if (isLoading === true && isInteresting === undefined) {
+      return (
+        <div className="article-loading-spinner">
+          <div className="article-spinner" />
+        </div>
+      );
+    }
+
+    if (isLoading === false && isInteresting === true) {
+      return <div>✅</div>;
+    }
+
+    if (isLoading === false && isInteresting === false) {
+      return <div>❌</div>;
+    }
+
+    return null;
+  }
   return (
     <li className={`list-felx  ${isSelected ? 'selected' : ''}`}>
       <div className="item" onClick={onSelect}>
@@ -39,13 +60,9 @@ export default function ArtikelItem({
           <strong>{artikelTitle}</strong>
         </span>
       </div>
-      {isInteresting === true ? (
-        <div>✅</div>
-      ) : isInteresting === false ? (
-        <div>❌</div>
-      ) : (
-        <div />
-      )}
+
+      {interessantInfo()}
+
       <button type="button" className="btn btn-lesen" onClick={openArticle}>
         Lesen
       </button>

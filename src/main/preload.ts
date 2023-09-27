@@ -12,7 +12,8 @@ export type Channels =
   | 'update-articles'
   | 'open-url'
   | 'search-gpt'
-  | 'gpt-response';
+  | 'gpt-response'
+  | 'gpt-loading';
 
 const electronHandler = {
   ipcRenderer: {
