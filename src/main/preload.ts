@@ -3,6 +3,8 @@
 import { IpcRendererEvent, contextBridge, ipcRenderer } from 'electron';
 import { RSSFeeds } from 'renderer/types/RSSFeeds';
 import { RSSFeedConfig } from '../renderer/types/RSSFeed';
+import { GPTKeys } from './types/GPTKeys';
+import { GPTKeyItem } from './types/GPTKeyItem';
 // import RSSFeedFileManager from 'renderer/BL/RSSFeedFileManager';
 
 export type Channels =
@@ -13,7 +15,10 @@ export type Channels =
   | 'open-url'
   | 'search-gpt'
   | 'gpt-response'
-  | 'gpt-loading';
+  | 'gpt-loading'
+  | 'save-key'
+  | 'load-key'
+  | 'remove-key';
 
 const electronHandler = {
   ipcRenderer: {
@@ -37,6 +42,10 @@ const electronHandler = {
     },
 
     saveRssFeed(channel: Channels, data: RSSFeedConfig | RSSFeeds) {
+      ipcRenderer.send(channel, data);
+    },
+
+    saveGPTKey(channel: Channels, data: GPTKeyItem | GPTKeys) {
       ipcRenderer.send(channel, data);
     },
 

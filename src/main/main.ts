@@ -17,6 +17,8 @@ import GPTHandler from './BL/GPTRequestsHandler';
 import { Feed } from './types/Feed';
 import fetchNewsArticle from './BL/FeedArticleScraper';
 import chunkSubString from './helpers/StringsUtil';
+import GPTKeyFileManager from './BL/GPTKeyFileManager';
+import { GPTKeys } from './types/GPTKeys';
 
 class AppUpdater {
   constructor() {
@@ -28,10 +30,47 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 const configPath = join(app.getPath('userData'), 'feeds.json');
-
+const keysPath = join(app.getPath('userData'), 'keys.json');
+const keysManager = new GPTKeyFileManager(keysPath);
 const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
-const gpt = new GPTHandler('');
+let gptKey: string = '';
+
+ipcMain.handle('load-key', (event: Electron.IpcMainInvokeEvent) => {
+  event.preventDefault();
+  try {
+    const keys = keysManager.loadKeys();
+    return keys;
+  } catch (error) {
+    return { keys: [] };
+  }
+});
+
+ipcMain.on('save-key', (event, args) => {
+  gptKey = args.keys[0].keyValue;
+  const currentKeys = keysManager.loadKeys();
+
+  const checkifKeyExists = currentKeys.keys.filter((key) => key.id === args.id);
+  if (checkifKeyExists.length >= 1) {
+    return;
+  }
+
+  const newKeys: GPTKeys = {
+    keys: [...currentKeys.keys, ...args.keys],
+  };
+
+  keysManager.saveKey(newKeys);
+});
+
+ipcMain.on('remove-key', (event, args) => {
+  const currentKeys = keysManager.loadKeys();
+
+  const checkifKeyExists = currentKeys.keys.filter((key) => key.id === args.id);
+  console.log(checkifKeyExists);
+  if (checkifKeyExists) {
+    keysManager.saveKey({ keys: checkifKeyExists });
+  }
+});
 
 ipcMain.on('save-rss', (event, args) => {
   const currentFeeds = feedManager.load();
@@ -53,6 +92,9 @@ ipcMain.on('open-url', async (event, args) => {
 });
 
 ipcMain.handle('search-gpt', async (event, args) => {
+  if (!gptKey) return 'You have to provide your GPT Key!';
+
+  const gpt = new GPTHandler(gptKey);
   event.preventDefault();
 
   const articles = args.articles as Feed[];

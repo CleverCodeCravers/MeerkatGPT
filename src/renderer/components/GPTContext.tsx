@@ -2,7 +2,7 @@ import { FeedArticleItem } from 'main/types/FeedArticleItem';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 
 interface GPTContextProps {
-  response: { feed: FeedArticleItem; response: any[] };
+  response: { feed: FeedArticleItem; response: any[] } | string;
   setResponse: React.Dispatch<
     React.SetStateAction<{ feed: FeedArticleItem; response: any[] }>
   >;

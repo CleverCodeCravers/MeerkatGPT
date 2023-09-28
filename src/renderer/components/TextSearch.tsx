@@ -14,6 +14,7 @@ function TextSearch() {
         'search-gpt',
         { articles, searchQuery: query }
       );
+
       return response;
     } catch (error) {
       return [];

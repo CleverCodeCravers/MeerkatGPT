@@ -1,28 +1,88 @@
-import React from 'react';
-// import { useArticlesContext } from './ArticlesContext';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import React, { useEffect, useState } from 'react';
+import { GPTKeys } from 'main/types/GPTKeys';
 import SearchResulTemplate from './SearchResultTemplate';
 import { useGPTContext } from './GPTContext';
 import { useSearchContext } from './SearchContext';
 import { useArticlesContext } from './ArticlesContext';
+import AddGPTKeyModal from './AddGPTKeyModal';
 
 function SearchResult() {
   const { articles } = useArticlesContext();
   const { response } = useGPTContext();
   const { searchQuery } = useSearchContext();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [keys, setKeys] = useState<GPTKeys>({ keys: [] });
 
-  if (response.response === null || typeof response.response === 'string') {
+  const fetchKeysFromFile = async () => {
+    try {
+      const data: GPTKeys = await window.electron.ipcRenderer.invoke(
+        'load-key'
+      );
+      return data;
+    } catch (error) {
+      return { keys: [] };
+    }
+  };
+
+  const saveKey = (keyName: string, keyValue: string, id: string) => {
+    const keyExists = keys.keys.some((key) => key.id === id);
+
+    if (!keyExists) {
+      setKeys((prevKeys) => ({
+        keys: [...prevKeys.keys, { id, keyName, keyValue }],
+      }));
+
+      window.electron.ipcRenderer.saveGPTKey('save-key', {
+        keys: [...keys.keys, { id, keyName, keyValue }],
+      });
+    } else {
+      console.log(`Key with ID ${id} already exists.`);
+    }
+  };
+
+  const updateKeys = (newKeys: GPTKeys) => {
+    setKeys(newKeys);
+    window.electron.ipcRenderer.saveGPTKey('remove-key', newKeys);
+  };
+
+  useEffect(() => {
+    const fetchKeys = async () => {
+      try {
+        const data = await fetchKeysFromFile();
+        setKeys(data);
+      } catch (error) {
+        // Handle error reading feeds
+      }
+    };
+    fetchKeys();
+  }, []);
+
+  if (typeof response === 'string') {
     return (
       <div className="search-result">
         <h2>GPT Results</h2>
         <div className="search-result-area">
           <p>
             {' '}
-            {typeof response.response === 'string'
-              ? response.response
-              : 'No Result from GPT! :'}
-            /
+            {typeof response === 'string' ? response : 'No Result from GPT! :'}/
           </p>
         </div>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => setModalOpen(true)}
+        >
+          GPT Keys
+        </button>
+        {isModalOpen && (
+          <AddGPTKeyModal
+            onRemove={updateKeys}
+            gptKeys={keys}
+            onAdd={saveKey}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </div>
     );
   }
@@ -34,6 +94,21 @@ function SearchResult() {
         <div className="search-result-area">
           <p> You have to enter a search query first!</p>
         </div>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => setModalOpen(true)}
+        >
+          GPT Keys
+        </button>
+        {isModalOpen && (
+          <AddGPTKeyModal
+            onRemove={updateKeys}
+            gptKeys={keys}
+            onAdd={saveKey}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </div>
     );
   }
@@ -44,6 +119,22 @@ function SearchResult() {
       <div className="search-result">
         <h2>GPT Results</h2>
         <div className="search-result-area" />
+        <button
+          className="btn"
+          type="button"
+          onClick={() => setModalOpen(true)}
+        >
+          {' '}
+          GPT Keys
+        </button>
+        {isModalOpen && (
+          <AddGPTKeyModal
+            onRemove={updateKeys}
+            gptKeys={keys}
+            onAdd={saveKey}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </div>
     );
   }
@@ -64,6 +155,22 @@ function SearchResult() {
             secondResponse={filterResponse[1].content}
           />
         </div>
+        <button
+          className="btn"
+          type="button"
+          onClick={() => setModalOpen(true)}
+        >
+          {' '}
+          GPT Keys
+        </button>
+        {isModalOpen && (
+          <AddGPTKeyModal
+            onRemove={updateKeys}
+            gptKeys={keys}
+            onAdd={saveKey}
+            onClose={() => setModalOpen(false)}
+          />
+        )}
       </div>
     );
   }
@@ -72,6 +179,18 @@ function SearchResult() {
     <div className="search-result">
       <h2>GPT Results</h2>
       <div className="search-result-area" />
+      <button className="btn" type="button" onClick={() => setModalOpen(true)}>
+        {' '}
+        GPT Keys
+      </button>
+      {isModalOpen && (
+        <AddGPTKeyModal
+          onRemove={updateKeys}
+          gptKeys={keys}
+          onAdd={saveKey}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
