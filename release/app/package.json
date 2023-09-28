@@ -1,8 +1,11 @@
 {
   "name": "meerkatgpt",
-  "version": "0.2",
+  "version": "0.0.2",
   "description": " MeerkatGPT is an app that filters articles from RSS feeds using GPT4 ",
   "license": "MIT",
+  "author": {
+    "name": "CCD"
+  },
   "main": "./dist/main/main.js",
   "scripts": {
     "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
