@@ -34,7 +34,8 @@ const keysPath = join(app.getPath('userData'), 'keys.json');
 const keysManager = new GPTKeyFileManager(keysPath);
 const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
-let gptKey: string = '';
+
+let gptKey: string = keysManager.loadKeys().keys[0].keyValue || '';
 
 ipcMain.handle('load-key', (event: Electron.IpcMainInvokeEvent) => {
   event.preventDefault();
