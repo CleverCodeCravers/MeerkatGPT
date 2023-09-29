@@ -34,14 +34,14 @@ const keysPath = join(app.getPath('userData'), 'keys.json');
 const keysManager = new GPTKeyFileManager(keysPath);
 const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
-
-let gptKey: string = keysManager.loadKeys().keys[0].keyValue || '';
+const { keys } = keysManager.loadKeys();
+let gptKey: string = keys.length >= 1 ? keys[0].keyValue : '';
 
 ipcMain.handle('load-key', (event: Electron.IpcMainInvokeEvent) => {
   event.preventDefault();
   try {
-    const keys = keysManager.loadKeys();
-    return keys;
+    const savedKeys = keysManager.loadKeys();
+    return savedKeys;
   } catch (error) {
     return { keys: [] };
   }
