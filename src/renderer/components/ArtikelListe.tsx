@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useCallback, useEffect, useState } from 'react';
 import { FeedArticleItem } from 'main/types/FeedArticleItem';
 import LoadingSpinner from 'renderer/shared/Loading';
@@ -11,6 +13,7 @@ export default function ArtikelListe() {
   const [selectedItem, setSelectedItemState] = useState<FeedArticleItem>();
   const { setResponse } = useGPTContext();
   const { isLoading } = useLoadingContext();
+  const [showInteresting, setShowInteresting] = useState(true);
   const [processingItems, setProcessingItems] = useState<
     {
       guid: string;
@@ -18,6 +21,10 @@ export default function ArtikelListe() {
       isInteresting: boolean | undefined;
     }[]
   >([]);
+
+  const toggleFilter = () => {
+    setShowInteresting(!showInteresting);
+  };
 
   const handleItemClick = (item: FeedArticleItem) => {
     setSelectedItemState(item);
@@ -121,7 +128,9 @@ export default function ArtikelListe() {
       <ul className="rss-articles">
         <li className="list-felx">
           <div className="article-title">Titel</div>
-          <div className="article-interesting">Interessant?</div>
+          <div className="article-interesting" onClick={toggleFilter}>
+            Interessant?
+          </div>
         </li>
 
         {articles.map((article) => {
@@ -130,6 +139,15 @@ export default function ArtikelListe() {
               processingItems.filter(
                 (item) => item.guid === articleItem.guid
               ) || undefined;
+
+            if (showInteresting && loading[0]?.isInteresting === false) {
+              return null;
+            }
+
+            if (!showInteresting && loading[0]?.isInteresting === true) {
+              return null;
+            }
+
             return (
               <ArtikelItem
                 artikelTitle={articleItem.title}

@@ -67,7 +67,7 @@ ipcMain.on('remove-key', (event, args) => {
   const currentKeys = keysManager.loadKeys();
 
   const checkifKeyExists = currentKeys.keys.filter((key) => key.id === args.id);
-  console.log(checkifKeyExists);
+
   if (checkifKeyExists) {
     keysManager.saveKey({ keys: checkifKeyExists });
   }
