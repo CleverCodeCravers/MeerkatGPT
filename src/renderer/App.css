@@ -22,7 +22,7 @@ body {
   justify-content: space-between;
   background-color: #d3c9c910;
   margin-top: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .main-header img {
@@ -41,7 +41,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 19px;
+  gap: 10px;
 }
 
 .nachrichten-quellen {
@@ -526,4 +526,49 @@ input[type='text'] {
   cursor: pointer;
   padding: 5px 10px;
   font-size: 12px;
+}
+
+.articles-buttons-area {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-stop {
+  background-color: #1f79dc;
+  font-size: 15px;
+  text-transform: uppercase;
+  color: rgb(233, 227, 227);
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 100px;
+  justify-self: end;
+  align-self: flex-end;
+}
+
+.articles-buttons-area h2 {
+  justify-self: start;
+  align-self: flex-start;
+}
+
+.progress-bar-container {
+  justify-self: center;
+  align-self: center;
+  width: 30%;
+  background-color: #f0f0f0;
+  height: 20px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  justify-self: center;
+  align-self: center;
+}
+
+/* Progress bar itself */
+.progress-bar {
+  height: 100%;
+  background-color: #1f79dc;
+  border-radius: 4px;
+  color: black;
+  text-align: center;
+  line-height: 20px;
+  transition: width 0.3s ease-in-out;
 }

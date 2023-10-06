@@ -206,7 +206,6 @@ const createWindow = async () => {
     show: true,
     width: 1600,
     height: 1050,
-    minWidth: 1450,
 
     icon: getAssetPath('meerkat/favicon.ico'),
     webPreferences: {

@@ -26,6 +26,19 @@ export default function ArtikelListe() {
     setShowInteresting(!showInteresting);
   };
 
+  const processedArticles = processingItems.filter(
+    (i) => i.loading === false
+  ).length;
+
+  const calculateProgress = () => {
+    const totalArticles = articles[0]?.items ? articles[0].items.length : 0;
+
+    const prec = (processedArticles / totalArticles) * 100;
+    if (Number.isNaN(prec)) return 0;
+    if (String(prec) === 'Infinity') return 0;
+    return prec;
+  };
+
   const handleItemClick = (item: FeedArticleItem) => {
     setSelectedItemState(item);
 
@@ -93,20 +106,30 @@ export default function ArtikelListe() {
     [articles, setArticles, processingItems, setProcessingItems]
   );
 
-  const handleLoading = useCallback(
-    (data: any) => {
-      const { guid } = data.feed;
-      const testLoading = data.loading;
+  const handleLoading = useCallback((data: any) => {
+    const { guid } = data.feed;
+    const testLoading = data.loading;
 
-      if (data.loading) {
-        setProcessingItems((prevProcessingItems) => [
-          ...prevProcessingItems,
-          { guid, loading: testLoading, isInteresting: undefined },
-        ]);
+    setProcessingItems((prevProcessingItems) => {
+      const itemIndex = prevProcessingItems.findIndex(
+        (item) => item.guid === guid
+      );
+
+      if (itemIndex !== -1) {
+        const updatedItems = [...prevProcessingItems];
+        updatedItems[itemIndex] = {
+          ...updatedItems[itemIndex],
+          loading: testLoading,
+        };
+        return updatedItems;
       }
-    },
-    [setProcessingItems]
-  );
+
+      return [
+        ...prevProcessingItems,
+        { guid, loading: testLoading, isInteresting: undefined },
+      ];
+    });
+  }, []);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('gpt-loading', handleLoading);
@@ -124,7 +147,22 @@ export default function ArtikelListe() {
   return (
     <div className="artikeln-liste">
       {isLoading && <LoadingSpinner />}
-      <h2>Artikelliste</h2>
+      <div className="articles-buttons-area">
+        <h2>Artikelliste</h2>
+
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar"
+            style={{ width: `${calculateProgress()}%` }}
+          >
+            {`${calculateProgress().toFixed(2)}%`}
+          </div>
+        </div>
+        <button type="button" className="btn-stop">
+          Stop
+        </button>
+      </div>
+
       <ul className="rss-articles">
         <li className="list-felx">
           <div className="article-title">Titel</div>
