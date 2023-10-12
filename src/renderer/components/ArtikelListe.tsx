@@ -30,13 +30,20 @@ export default function ArtikelListe() {
     (i) => i.loading === false
   ).length;
 
-  const calculateProgress = () => {
-    const totalArticles = articles[0]?.items ? articles[0].items.length : 0;
+  const calculateProcessedArticles = () => {
+    const totalArticles =
+      articles.length >= 1
+        ? articles
+            .map((feed) => feed.items?.length)
+            .reduce((a, c) => (a && c ? a + c : 0))
+        : 0;
 
-    const prec = (processedArticles / totalArticles) * 100;
-    if (Number.isNaN(prec)) return 0;
-    if (String(prec) === 'Infinity') return 0;
-    return prec;
+    return `${processedArticles}/${totalArticles}`;
+  };
+
+  const handleStopSearch = () => {
+    window.electron.ipcRenderer.stopSearch('stop-search', true);
+    setProcessingItems(() => []);
   };
 
   const handleItemClick = (item: FeedArticleItem) => {
@@ -66,9 +73,15 @@ export default function ArtikelListe() {
     (data: any) => {
       let isInteresting: boolean;
       if (data.response && data.response.length > 0) {
-        if (data.response[1].content.includes('Nein')) {
+        if (
+          data.response[1].content.includes('Nein') ||
+          data.response[1].content.includes('No')
+        ) {
           isInteresting = false;
-        } else if (data.response[1].content.includes('Ja')) {
+        } else if (
+          data.response[1].content.includes('Ja') ||
+          data.response[1].content.includes('Yes')
+        ) {
           isInteresting = true;
         }
       }
@@ -150,17 +163,13 @@ export default function ArtikelListe() {
       <div className="articles-buttons-area">
         <h2>Artikelliste</h2>
 
-        <div className="progress-bar-container">
-          <div
-            className="progress-bar"
-            style={{ width: `${calculateProgress()}%` }}
-          >
-            {`${calculateProgress().toFixed(2)}%`}
-          </div>
-        </div>
-        <button type="button" className="btn-stop">
+        <button type="button" className="btn-stop" onClick={handleStopSearch}>
           Stop
         </button>
+
+        <div className="processed-items">
+          Processed: {calculateProcessedArticles()}
+        </div>
       </div>
 
       <ul className="rss-articles">

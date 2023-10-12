@@ -36,6 +36,7 @@ const feedManager = new RSSFeedFileManager(configPath);
 const feedsFetcher = new RSSFeedFetcher();
 const { keys } = keysManager.loadKeys();
 let gptKey: string = keys.length >= 1 ? keys[0].keyValue : '';
+let stopGPTSearch: boolean = false;
 
 ipcMain.handle('load-key', (event: Electron.IpcMainInvokeEvent) => {
   event.preventDefault();
@@ -45,6 +46,10 @@ ipcMain.handle('load-key', (event: Electron.IpcMainInvokeEvent) => {
   } catch (error) {
     return { keys: [] };
   }
+});
+
+ipcMain.on('stop-search', (event, args) => {
+  stopGPTSearch = args;
 });
 
 ipcMain.on('save-key', (event, args) => {
@@ -104,17 +109,33 @@ ipcMain.handle('search-gpt', async (event, args) => {
   for (const feed of articles) {
     if (feed?.items) {
       for (const item of feed.items) {
+        if (stopGPTSearch) {
+          stopGPTSearch = false;
+          break;
+        }
+
         event.sender.send('gpt-loading', {
           feed: item,
           loading: true,
         });
+        let articleText = ``;
 
-        const fetchArticle = await fetchNewsArticle(item.link);
-        if (!fetchNewsArticle) continue;
+        if (
+          item['content:encodedSnippet'] &&
+          item['content:encodedSnippet'].length > 1000
+        ) {
+          articleText = item['content:encodedSnippet']
+            .replaceAll('\n', '')
+            .trim();
+        } else {
+          articleText = await fetchNewsArticle(item.link);
+          if (!articleText) continue;
+        }
+
         const text = `
         Bitte prüfe ob der untengenannte Text Informationen zu ${args.searchQuery} enthält. Antworte mit Ja oder nein nur.
             '
-            ${fetchArticle}
+            ${articleText}
             '`;
 
         const textProccessed = chunkSubString(text, 4000);
@@ -125,7 +146,6 @@ ipcMain.handle('search-gpt', async (event, args) => {
             content: `Welche Informationen zu ${args.searchQuery} enthält der oben genannte Text`,
           },
         ]);
-
         results.push(response); // Store the response for each article
 
         // Send the response back to the frontend

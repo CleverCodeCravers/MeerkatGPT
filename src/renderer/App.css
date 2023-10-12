@@ -550,25 +550,10 @@ input[type='text'] {
   align-self: flex-start;
 }
 
-.progress-bar-container {
+.processed-items {
   justify-self: center;
   align-self: center;
-  width: 30%;
-  background-color: #f0f0f0;
-  height: 20px;
-  border-radius: 4px;
-  margin-bottom: 15px;
-  justify-self: center;
-  align-self: center;
-}
-
-/* Progress bar itself */
-.progress-bar {
-  height: 100%;
-  background-color: #1f79dc;
-  border-radius: 4px;
-  color: black;
   text-align: center;
-  line-height: 20px;
-  transition: width 0.3s ease-in-out;
+  width: 20%;
+  margin-bottom: 15px;
 }

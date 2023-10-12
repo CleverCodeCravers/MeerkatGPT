@@ -12,7 +12,6 @@ export type Channels =
   | 'fetch-feeds'
   | 'remove-rss'
   | 'update-articles'
-  | 'open-url'
   | 'search-gpt'
   | 'gpt-response'
   | 'gpt-loading'
@@ -49,6 +48,10 @@ const electronHandler = {
       ipcRenderer.send(channel, data);
     },
 
+    stopSearch(channel: 'stop-search', stop: boolean) {
+      ipcRenderer.send(channel, stop);
+    },
+
     async invoke(channel: Channels, args?: any) {
       return ipcRenderer.invoke(channel, args);
     },
@@ -57,7 +60,7 @@ const electronHandler = {
       ipcRenderer.send(channel, data);
     },
 
-    openExternal(channel: Channels, url: string) {
+    openExternal(channel: 'open-url', url: string) {
       ipcRenderer.send(channel, url);
     },
   },
