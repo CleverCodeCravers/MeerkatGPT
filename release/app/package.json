@@ -1,6 +1,6 @@
 {
   "name": "meerkatgpt",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": " MeerkatGPT is an app that filters articles from RSS feeds using GPT4 ",
   "license": "MIT",
   "author": {
