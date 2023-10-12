@@ -563,3 +563,16 @@ input[type='text'] {
   width: 20%;
   margin-bottom: 15px;
 }
+
+.error-message {
+  color: rgb(218, 71, 71);
+  padding: 10px;
+  font-size: 16px;
+}
+
+.gptkey-button-add-disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  pointer-events: none;
+}

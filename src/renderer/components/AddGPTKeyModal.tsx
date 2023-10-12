@@ -11,9 +11,12 @@ interface ModalProps {
   onRemove: (keys: GPTKeys) => void;
 }
 
+const keyValueRegex = /^sk-[a-zA-Z0-9]{48}$/;
+
 function AddGPTKeyModal({ onAdd, onClose, gptKeys, onRemove }: ModalProps) {
   const [keyName, setKeyName] = useState<string>('');
   const [keyValue, setKeyValue] = useState<string>('');
+  const [isValidKeyValue, setIsValidKeyValue] = useState<boolean>(true);
 
   const addKey = () => {
     if (keyName && keyValue) {
@@ -21,6 +24,11 @@ function AddGPTKeyModal({ onAdd, onClose, gptKeys, onRemove }: ModalProps) {
       setKeyName('');
       setKeyValue('');
     }
+  };
+
+  const handleKeyValueChange = (value: string) => {
+    setIsValidKeyValue(keyValueRegex.test(value));
+    setKeyValue(value);
   };
 
   const removeKey = (id: string) => {
@@ -50,9 +58,21 @@ function AddGPTKeyModal({ onAdd, onClose, gptKeys, onRemove }: ModalProps) {
             type="text"
             placeholder="Key Value"
             value={keyValue}
-            onChange={(e) => setKeyValue(e.target.value)}
+            onChange={(e) => handleKeyValueChange(e.target.value)}
+            className={isValidKeyValue ? '' : 'invalid-input'}
           />
-          <button className="gptkey-button-add" type="button" onClick={addKey}>
+          {!isValidKeyValue && (
+            <div className="error-message">
+              The Key you provided does not look like a GPT API Key!
+            </div>
+          )}
+          <button
+            className={`gptkey-button-add ${
+              !isValidKeyValue && 'gptkey-button-add-disabled'
+            }`}
+            type="button"
+            onClick={addKey}
+          >
             Add Key
           </button>
         </div>
