@@ -160,7 +160,7 @@ export default function ArtikelListe() {
   return (
     <div className="artikeln-liste">
       {isLoading && <LoadingSpinner />}
-      <div className="articles-buttons-area">
+      <div className="articles-liste-header-area">
         <h2>Artikelliste</h2>
 
         <button type="button" className="btn-stop" onClick={handleStopSearch}>
@@ -168,7 +168,7 @@ export default function ArtikelListe() {
         </button>
 
         <div className="processed-items">
-          Processed: {calculateProcessedArticles()}
+          Bearbeitet: {calculateProcessedArticles()}
         </div>
       </div>
 

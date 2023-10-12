@@ -528,9 +528,10 @@ input[type='text'] {
   font-size: 12px;
 }
 
-.articles-buttons-area {
+.articles-liste-header-area {
   display: flex;
   justify-content: space-between;
+  padding-left: 10px;
 }
 
 .btn-stop {
@@ -545,7 +546,7 @@ input[type='text'] {
   align-self: flex-end;
 }
 
-.articles-buttons-area h2 {
+.articles-liste-header-area h2 {
   justify-self: start;
   align-self: flex-start;
 }
