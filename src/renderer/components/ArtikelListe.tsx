@@ -72,16 +72,13 @@ export default function ArtikelListe() {
   const handleGPTResponse = useCallback(
     (data: any) => {
       let isInteresting: boolean;
+      const nichtInteressantRegex = /(?:nein|no)/i;
+      const interessantRegex = /(?:yes|ja)/i;
+
       if (data.response && data.response.length > 0) {
-        if (
-          data.response[1].content.includes('Nein') ||
-          data.response[1].content.includes('No')
-        ) {
+        if (nichtInteressantRegex.test(data.response[1].content)) {
           isInteresting = false;
-        } else if (
-          data.response[1].content.includes('Ja') ||
-          data.response[1].content.includes('Yes')
-        ) {
+        } else if (interessantRegex.test(data.response[1].content)) {
           isInteresting = true;
         }
       }
@@ -164,7 +161,7 @@ export default function ArtikelListe() {
         <h2>Artikelliste</h2>
 
         <button type="button" className="btn-stop" onClick={handleStopSearch}>
-          Stop
+          Stop / Reset
         </button>
 
         <div className="processed-items">

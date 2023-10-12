@@ -546,6 +546,11 @@ input[type='text'] {
   align-self: flex-end;
 }
 
+.btn-stop:hover {
+  background-color: white;
+  color: #1f79dc;
+}
+
 .articles-liste-header-area h2 {
   justify-self: start;
   align-self: flex-start;
