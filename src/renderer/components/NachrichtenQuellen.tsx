@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import React, { useEffect, useState } from 'react';
 import { RSSFeedConfig } from 'renderer/types/RSSFeed';
 import { RSSFeeds } from 'renderer/types/RSSFeeds';
@@ -10,33 +11,31 @@ import { useLoadingContext } from './LoadingContext';
 export default function NachrichtenQuellen() {
   const [showModal, setShowModal] = useState(false);
   const [feeds, setFeeds] = useState<RSSFeeds>({ feeds: [] });
-  const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
+  // const [selectedFeeds, setSelectedFeeds] = useState<string[]>([]);
   const { setIsLoading } = useLoadingContext();
   const { setArticles } = useArticlesContext();
+  const [selectedFeedNames, setSelectedFeedNames] = useState<string[]>([]);
 
   const handleSelectFeed = (name: string) => {
-    setSelectedFeeds([name]);
+    if (selectedFeedNames.includes(name)) {
+      setSelectedFeedNames(selectedFeedNames.filter((feed) => feed !== name));
+    } else {
+      setSelectedFeedNames([...selectedFeedNames, name]);
+    }
   };
 
   const handleRemoveSelectedFeeds = () => {
-    const rssToRemove = feeds.feeds.filter((feed) =>
-      selectedFeeds.includes(feed.name)
-    );
-
-    if (rssToRemove.length === 0) return;
+    const feedNamesToRemove = selectedFeedNames;
 
     const updatedFeeds = feeds.feeds.filter(
-      (feed) => !selectedFeeds.includes(feed.name)
+      (feed) => !feedNamesToRemove.includes(feed.name)
     );
 
     setFeeds({ feeds: updatedFeeds });
 
-    window.electron.ipcRenderer.removeRSSFeed(
-      'remove-rss',
-      rssToRemove[0].name
-    );
+    window.electron.ipcRenderer.removeRSSFeed('remove-rss', feedNamesToRemove);
 
-    setSelectedFeeds([]);
+    setSelectedFeedNames([]);
   };
 
   const handleAddFeed = async (name: string, url: string) => {
@@ -65,10 +64,13 @@ export default function NachrichtenQuellen() {
 
   const updateArtikelListe = async () => {
     setIsLoading(true);
+
     try {
       const response: Feed[] = await window.electron.ipcRenderer.invoke(
-        'update-articles'
+        'update-articles',
+        selectedFeedNames
       );
+
       setIsLoading(false);
       return setArticles(response);
     } catch (error) {
@@ -92,7 +94,7 @@ export default function NachrichtenQuellen() {
       const target = event.target as HTMLElement;
 
       if (!target.closest('.rss-feeds')) {
-        setSelectedFeeds([]);
+        setSelectedFeedNames([]);
       }
     };
 
@@ -122,8 +124,17 @@ export default function NachrichtenQuellen() {
             <NachrichtenQuelle
               sourceName={feed.name}
               key={feed.name}
-              isSelected={selectedFeeds.includes(feed.name)}
+              isSelected={selectedFeedNames.includes(feed.name)}
               onSelect={() => handleSelectFeed(feed.name)}
+              onCheckboxChange={(isChecked) => {
+                if (isChecked) {
+                  setSelectedFeedNames([...selectedFeedNames, feed.name]);
+                } else {
+                  setSelectedFeedNames(
+                    selectedFeedNames.filter((name) => name !== feed.name)
+                  );
+                }
+              }}
             />
           );
         })}

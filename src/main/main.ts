@@ -88,7 +88,10 @@ ipcMain.on('save-rss', (event, args) => {
 
 ipcMain.on('remove-rss', (event, args) => {
   const currentFeeds = feedManager.load();
-  const updatedFeeds = currentFeeds.feeds.filter((feed) => feed.name !== args);
+  const updatedFeeds = currentFeeds.feeds.filter((feed) =>
+    typeof args === 'string' ? feed.name !== args : !args.includes(feed.name)
+  );
+
   const newFeeds = { feeds: updatedFeeds };
   feedManager.save(newFeeds);
 });
@@ -161,13 +164,25 @@ ipcMain.handle('search-gpt', async (event, args) => {
   return results.flat(1);
 });
 
-ipcMain.handle('update-articles', async (event) => {
+ipcMain.handle('update-articles', async (event, args) => {
   event.preventDefault();
 
   try {
     const feeds = feedManager.load();
     if (feeds.feeds.length === 0) return [];
-    const articles = await feedsFetcher.fetchRSSFeeds(feeds);
+
+    if (args.length === 0) {
+      const articles = await feedsFetcher.fetchRSSFeeds(feeds);
+      return articles;
+    }
+
+    const filteredFeeds = feeds.feeds.filter((feed) =>
+      args.includes(feed.name)
+    );
+
+    const feedsToFetch: RSSFeeds = { feeds: filteredFeeds };
+
+    const articles = await feedsFetcher.fetchRSSFeeds(feedsToFetch);
     return articles;
   } catch (error) {
     return [];

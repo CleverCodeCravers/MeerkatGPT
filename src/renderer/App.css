@@ -576,3 +576,14 @@ input[type='text'] {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+input[type='checkbox'] {
+  width: 16px;
+  height: 20px;
+  margin-right: 10px;
+  margin-top: 3px;
+  border: 2px solid #ccc;
+  background-color: #fff;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}

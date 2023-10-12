@@ -56,7 +56,7 @@ const electronHandler = {
       return ipcRenderer.invoke(channel, args);
     },
 
-    removeRSSFeed(channel: Channels, data: string) {
+    removeRSSFeed(channel: Channels, data: string | string[]) {
       ipcRenderer.send(channel, data);
     },
 

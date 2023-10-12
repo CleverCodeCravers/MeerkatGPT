@@ -6,16 +6,24 @@ interface NachrichtenQuelleProps {
   sourceName: string;
   isSelected: boolean;
   onSelect: () => void;
+  onCheckboxChange: (isChecked: boolean) => void;
 }
 
 export default function NachrichtenQuelle({
   sourceName,
   isSelected,
   onSelect,
+  onCheckboxChange,
 }: NachrichtenQuelleProps) {
   return (
     <li className={`${isSelected ? 'selected' : ''}`}>
       <div className="rss-feed" onClick={onSelect}>
+        <input
+          type="checkbox"
+          checked={isSelected}
+          className="feed-checkbox"
+          onChange={(e) => onCheckboxChange(e.target.checked)}
+        />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="32"
